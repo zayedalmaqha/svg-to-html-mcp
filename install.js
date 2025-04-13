@@ -66,7 +66,7 @@ if (claudeConfigPath && fs.existsSync(claudeConfigPath)) {
         // 도구 명령 설정 - GitHub 저장소 방식
         config['svg-to-html'] = {
             command: 'npx',
-            args: ['-y', 'github:zayedalmaqha/svg-to-html-mcp']
+            args: ['-y', 'github:zayedalmaqha/svg-to-html-mcp#npx-compatible']
         };
         
         // 수정된 설정 파일 저장
@@ -79,7 +79,7 @@ if (claudeConfigPath && fs.existsSync(claudeConfigPath)) {
         console.log(`Claude 설정 파일(${claudeConfigPath})에 다음을 추가하세요:`);
         console.log(`"svg-to-html": {
   "command": "npx",
-  "args": ["-y", "github:zayedalmaqha/svg-to-html-mcp"]
+  "args": ["-y", "github:zayedalmaqha/svg-to-html-mcp#npx-compatible"]
 }`);
     }
 } else {
