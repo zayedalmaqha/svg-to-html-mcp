@@ -24,17 +24,25 @@ console.log(`설치 디렉토리: ${scriptDir}`);
 if (isMac) {
     try {
         console.log('macOS 환경 설정 중...');
-        if (fs.existsSync(path.join(scriptDir, 'run.sh'))) {
-            execSync(`chmod +x "${path.join(scriptDir, 'run.sh')}"`);
-            console.log('run.sh에 실행 권한이 부여되었습니다.');
-        }
-        
-        if (fs.existsSync(path.join(scriptDir, 'index.js'))) {
-            execSync(`chmod +x "${path.join(scriptDir, 'index.js')}"`);
-            console.log('index.js에 실행 권한이 부여되었습니다.');
+        if (fs.existsSync(path.join(scriptDir, 'dist', 'index.js'))) {
+            execSync(`chmod +x "${path.join(scriptDir, 'dist', 'index.js')}"`);
+            console.log('dist/index.js에 실행 권한이 부여되었습니다.');
         }
     } catch (error) {
         console.error('실행 권한 부여 실패:', error.message);
+    }
+}
+
+// 빌드가 필요한지 확인
+if (!fs.existsSync(path.join(scriptDir, 'dist', 'index.js'))) {
+    console.log('빌드된 JavaScript 파일이 없습니다. TypeScript 컴파일을 실행합니다...');
+    try {
+        execSync('npm run build', { cwd: scriptDir, stdio: 'inherit' });
+        console.log('빌드가 완료되었습니다.');
+    } catch (error) {
+        console.error('빌드 실패:', error.message);
+        console.error('프로젝트를 설치하기 전에 npm install 명령어를 실행한 후 다시 시도하세요.');
+        process.exit(1);
     }
 }
 

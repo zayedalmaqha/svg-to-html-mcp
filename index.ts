@@ -29,18 +29,6 @@ const SVG_TO_HTML_TOOL: Tool = {
   }
 };
 
-const server = new Server(
-  {
-    name: "SVG to HTML Converter",
-    version: "1.0.0",
-  },
-  {
-    capabilities: {
-      tools: {},
-    },
-  }
-);
-
 // Function to validate arguments
 function isSvgToHtmlArgs(args: unknown): args is {
   artifact_content: string;
@@ -138,74 +126,96 @@ function escapeHtml(unsafe: string): string {
      .replace(/'/g, "&#039;");
 }
 
-server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: [SVG_TO_HTML_TOOL],
-}));
-
-server.setRequestHandler(CallToolRequestSchema, async (request) => {
-  try {
-    const { name, arguments: args } = request.params;
-
-    if (!args) {
-      throw new Error("No arguments provided");
+async function main() {
+  console.error("SVG to HTML MCP Server starting...");
+  
+  const server = new Server(
+    {
+      name: "SVG to HTML Converter",
+      version: "1.0.0",
+    },
+    {
+      capabilities: {
+        tools: {},
+      },
     }
+  );
 
-    if (name === "svg_to_html") {
-      if (!isSvgToHtmlArgs(args)) {
-        // Check for specific missing arguments to provide helpful error messages
-        const typedArgs = args as any;
-        
-        if (!typedArgs.artifact_content) {
-          return {
-            content: [{ 
-              type: "text", 
-              text: "Error: No artifact content provided. Please provide the TypeScript code from an artifact or ask Claude to create one first."
-            }],
-            isError: true
-          };
-        }
-        
-        if (!typedArgs.artifact_version) {
-          return {
-            content: [{ 
-              type: "text", 
-              text: "Error: No artifact version specified. Please specify a version (e.g., 'v1', 'latest')."
-            }],
-            isError: true
-          };
-        }
-        
-        throw new Error("Invalid arguments for SVG to HTML tool");
+  server.setRequestHandler(ListToolsRequestSchema, async () => ({
+    tools: [SVG_TO_HTML_TOOL],
+  }));
+
+  server.setRequestHandler(CallToolRequestSchema, async (request) => {
+    try {
+      const { name, arguments: args } = request.params;
+
+      if (!args) {
+        throw new Error("No arguments provided");
       }
 
-      const htmlOutput = convertTsToHtml(args.artifact_content, args.artifact_version);
-      
+      if (name === "svg_to_html") {
+        if (!isSvgToHtmlArgs(args)) {
+          // Check for specific missing arguments to provide helpful error messages
+          const typedArgs = args as any;
+          
+          if (!typedArgs.artifact_content) {
+            return {
+              content: [{ 
+                type: "text", 
+                text: "Error: No artifact content provided. Please provide the TypeScript code from an artifact or ask Claude to create one first."
+              }],
+              isError: true
+            };
+          }
+          
+          if (!typedArgs.artifact_version) {
+            return {
+              content: [{ 
+                type: "text", 
+                text: "Error: No artifact version specified. Please specify a version (e.g., 'v1', 'latest')."
+              }],
+              isError: true
+            };
+          }
+          
+          throw new Error("Invalid arguments for SVG to HTML tool");
+        }
+
+        const htmlOutput = convertTsToHtml(args.artifact_content, args.artifact_version);
+        
+        return {
+          content: [{ 
+            type: "text", 
+            text: htmlOutput
+          }],
+          isError: false
+        };
+      }
+
       return {
-        content: [{ 
-          type: "text", 
-          text: htmlOutput
-        }],
-        isError: false
+        content: [{ type: "text", text: `Unknown tool: ${name}` }],
+        isError: true,
+      };
+    } catch (error) {
+      return {
+        content: [
+          {
+            type: "text",
+            text: `Error: ${error instanceof Error ? error.message : String(error)}`,
+          },
+        ],
+        isError: true,
       };
     }
+  });
 
-    return {
-      content: [{ type: "text", text: `Unknown tool: ${name}` }],
-      isError: true,
-    };
-  } catch (error) {
-    return {
-      content: [
-        {
-          type: "text",
-          text: `Error: ${error instanceof Error ? error.message : String(error)}`,
-        },
-      ],
-      isError: true,
-    };
-  }
+  const transport = new StdioServerTransport();
+  await server.connect(transport);
+  console.error("SVG to HTML MCP Server running on stdio");
+}
+
+// Run the server
+main().catch(error => {
+  console.error("Error starting SVG to HTML MCP Server:", error);
+  process.exit(1);
 });
-
-const transport = new StdioServerTransport();
-await server.connect(transport);
-console.error("SVG to HTML MCP Server running on stdio");

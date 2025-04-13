@@ -1,3 +1,6 @@
+# 소스 코드 (컴파일된 버전만 배포)
+src/
+
 # 소스 관리 파일
 .git
 .github
@@ -8,6 +11,11 @@
 .idea
 *.swp
 *.swo
+
+# 테스트 파일
+tests/
+*.test.js
+*.spec.js
 
 # 빌드 제외 파일
 node_modules
@@ -20,6 +28,13 @@ yarn-error.log*
 .env.local
 .env.development
 
-# 문서 및 설명 파일 (필요에 따라 포함 가능)
-# README.md
-# LICENSE
+# 로컬 실행 스크립트
+run.sh
+run.bat
+
+# TypeScript 설정 (필요하지 않음)
+tsconfig.json
+
+# 기타 불필요한 파일
+*.md
+!README.md

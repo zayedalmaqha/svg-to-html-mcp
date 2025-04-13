@@ -13,55 +13,30 @@ SVG to HTML MCP Tool
 
 사전 요구사항:
 - Windows 또는 macOS
-- Node.js 18+ 또는 Bun(macOS)
-- Claude 데스크톱 앱 설치
+- Node.js 18+ 설치
 
-설치 단계:
+설치 방법:
+1. GitHub에서 직접 실행 (권장):
+   Claude 데스크톱 설정 파일에 다음을 추가합니다:
 
-1. 이 저장소를 클론합니다:
-git clone https://github.com/yourusername/svg-to-html-mcp.git
-cd svg-to-html-mcp
+   "svg-to-html": {
+     "command": "npx",
+     "args": ["-y", "github:zayedalmaqha/svg-to-html-mcp"]
+   }
 
-2. 의존성을 설치합니다:
-# Windows 또는 macOS 공통
-npm install
+2. 로컬 설치:
+   a. 저장소를 클론합니다:
+      git clone https://github.com/zayedalmaqha/svg-to-html-mcp.git
+      cd svg-to-html-mcp
 
-# 또는 macOS에서 Bun 사용시
-bun install
+   b. 의존성을 설치하고 빌드합니다:
+      npm install
+      npm run build
 
-3. Claude 데스크톱 구성을 업데이트합니다:
+   c. 설치 스크립트를 실행합니다:
+      npm run install-tool
 
-macOS:
-`claude_desktop_config.json` 파일(일반적으로 `~/Library/Application Support/Claude/claude_desktop_config.json`에 위치)을 편집합니다:
-
-"svg-to-html": {
-  "command": "node",
-  "args": ["--loader", "ts-node/esm", "/path/to/svg-to-html-mcp/index.ts"]
-}
-
-또는 Bun을 사용하는 경우:
-"svg-to-html": {
-  "command": "/path/to/bun",
-  "args": ["run", "/path/to/svg-to-html-mcp/index.ts"]
-}
-
-Windows:
-`claude_desktop_config.json` 파일(일반적으로 `%APPDATA%\Claude\claude_desktop_config.json`에 위치)을 편집합니다:
-
-"svg-to-html": {
-  "command": "node",
-  "args": ["--loader", "ts-node/esm", "C:\\path\\to\\svg-to-html-mcp\\index.ts"]
-}
-
-4. Claude 데스크톱 앱을 재시작합니다.
-
-■ 빌드 방법 (선택 사항)
-
-TypeScript 코드를 JavaScript로 컴파일하려면:
-
-npm run build
-
-이후 생성된 `dist/index.js` 파일을 실행에 사용할 수 있습니다.
+3. Claude 데스크톱 앱을 재시작합니다.
 
 ■ 사용 방법
 
@@ -77,16 +52,22 @@ npm run build
 - 아티팩트 버전을 지정해야 합니다.
 - 현재는 TypeScript 코드를 HTML로 표시만 하며, 코드 실행은 지원하지 않습니다.
 
+■ 프로젝트 구조
+
+- dist/: 컴파일된 JavaScript 파일
+- src/: TypeScript 소스 코드
+- package.json: 프로젝트 정보 및 의존성 정의
+- tsconfig.json: TypeScript 컴파일러 설정
+
 ■ 문제해결
 
 도구가 제대로 작동하지 않는 경우:
 
 1. Claude 데스크톱 앱이 설치되어 있고 로그인되어 있는지 확인하세요.
-2. claude_desktop_config.json에서 경로가 올바른지 확인하세요:
-   - Windows에서는 경로 구분자로 `\\`를 사용해야 합니다 (예: `C:\\Users\\사용자이름\\...`)
-   - macOS에서는 경로 구분자로 `/`를 사용해야 합니다 (예: `/Users/사용자이름/...`)
-3. Node.js가 제대로 설치되어 있는지 확인하세요 (Windows) 또는 Bun이 제대로 설치되어 있는지 확인하세요 (macOS).
-4. Claude 앱을 재시작해보세요.
+2. Node.js가 제대로 설치되어 있는지 확인하세요 (v18 이상).
+3. GitHub 저장소 방식을 사용하는 경우 인터넷 연결을 확인하세요.
+4. 로컬 설치를 사용하는 경우 npm install 및 npm run build가 오류 없이 실행되었는지 확인하세요.
+5. Claude 앱을 재시작해보세요.
 
 ■ 라이선스
 

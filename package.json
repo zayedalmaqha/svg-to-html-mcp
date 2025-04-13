@@ -1,35 +1,32 @@
 {
   "name": "svg-to-html-mcp",
   "version": "1.0.0",
-  "module": "index.ts",
   "type": "module",
   "description": "A Claude MCP tool to convert artifact TypeScript code to HTML pages",
   "license": "MIT",
+  "main": "dist/index.js",
   "scripts": {
-    "start": "ts-node --esm index.ts",
     "build": "tsc",
-    "dev:mac": "bun run index.ts",
-    "dev:win": "ts-node --esm index.ts",
-    "install-tool": "node install.js",
-    "prepublish": "npm run build"
+    "prepare": "npm run build",
+    "start": "node dist/index.js",
+    "install-tool": "node install.js"
   },
   "dependencies": {
-    "@modelcontextprotocol/sdk": "^1.5.0",
-    "ts-node": "^10.9.1",
-    "typescript": "^5.0.0"
+    "@modelcontextprotocol/sdk": "^1.5.0"
   },
   "devDependencies": {
-    "@types/node": "^22.13.4"
+    "@types/node": "^22.13.4",
+    "typescript": "^5.0.0"
   },
   "bin": {
-    "svg-to-html-mcp": "./index.js"
+    "svg-to-html-mcp": "dist/index.js"
   },
   "engines": {
     "node": ">=18.0.0"
   },
   "files": [
-    "index.js",
-    "index.ts",
-    "dist"
+    "dist",
+    "README.md",
+    "LICENSE"
   ]
 }

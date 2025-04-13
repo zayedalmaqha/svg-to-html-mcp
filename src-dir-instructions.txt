@@ -1,0 +1,57 @@
+# 디렉토리 구조 변경 지침
+
+프로젝트를 JavaScript 중심으로 변경하기 위해 다음 단계를 따라주세요:
+
+1. `src` 디렉토리 생성
+   ```
+   mkdir src
+   ```
+
+2. `index.ts` 파일을 `src` 디렉토리로 이동
+   ```
+   move index.ts src/
+   ```
+   (macOS/Linux에서는 `mv index.ts src/`)
+
+3. npm 패키지 설치 (TypeScript 컴파일을 위함)
+   ```
+   npm install
+   ```
+
+4. TypeScript 코드 컴파일
+   ```
+   npm run build
+   ```
+
+5. 필요 없는 파일 제거 (선택 사항)
+   ```
+   del index.js
+   ```
+   (macOS/Linux에서는 `rm index.js`)
+
+이 변경을 통해 다음과 같은 디렉토리 구조를 가지게 됩니다:
+
+```
+svg-to-html-mcp/
+├── dist/              # 컴파일된 JavaScript 파일
+│   └── index.js       # 실행 파일
+├── src/               # TypeScript 소스 코드
+│   └── index.ts
+├── .npmignore
+├── install.js
+├── package.json
+├── README.txt
+├── readme_fornewuser.txt
+├── tsconfig.json
+└── ... (기타 파일들)
+```
+
+GitHub 저장소에 푸시하기 전에 다음 명령어로 변경사항을 커밋하세요:
+
+```
+git add .
+git commit -m "코드를 JavaScript 중심으로 리팩토링"
+git push origin main
+```
+
+이렇게 하면 npx를 통해 GitHub 저장소에서 직접 실행할 때 호환성 문제가 해결됩니다.
