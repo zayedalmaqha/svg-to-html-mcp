@@ -636,7 +636,7 @@ function convertTsToHtml(tsCode, version) {
                         formatter: function(value, context) {
                             const label = context.chart.data.labels[context.dataIndex];
                             const percentage = Math.round((value / context.dataset.data.reduce((a, b) => a + b, 0)) * 100);
-                            return `${label}: ${percentage}%`;
+                            return label + ": " + percentage + "%";
                         }
                     };
                     
@@ -656,10 +656,11 @@ function convertTsToHtml(tsCode, version) {
         } catch (error) {
             console.error('Error executing TypeScript code:', error);
             const container = document.getElementById('chart-container');
-            container.innerHTML = `<div style="color: red; padding: 20px;">
-                <h2>Error executing code</h2>
-                <pre>${error.toString()}</pre>
-            </div>`;
+            container.innerHTML =
+              '<div style="color: red; padding: 20px;">' +
+                '<h2>Error executing code</h2>' +
+                '<pre>' + error.toString() + '</pre>' +
+              '</div>';
         }
     </script>
 </body>
