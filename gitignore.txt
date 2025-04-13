@@ -1,0 +1,18 @@
+# 의존성 폴더
+node_modules/
+
+# 빌드 결과물
+dist/
+
+# 로그 파일
+*.log
+
+# 환경 변수 파일
+.env
+
+# macOS 시스템 파일
+.DS_Store
+
+# IDE 설정 파일
+.vscode/
+.idea/

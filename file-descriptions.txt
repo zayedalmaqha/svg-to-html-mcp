@@ -1,0 +1,73 @@
+SVG to HTML MCP 도구 파일 설명
+
+이 문서는 SVG to HTML MCP 도구의 각 파일과 그 기능을 설명합니다.
+
+■ 핵심 파일
+
+index.ts
+MCP 서버의 메인 코드 파일입니다. 이 파일에는 다음 기능이 포함되어 있습니다:
+- MCP 도구 정의 및 스키마
+- TypeScript 코드를 HTML로 변환하는 로직
+- 요청 처리 및 응답 생성
+- 오류 처리 및 검증
+
+이 파일이 실행되면 Claude가 TypeScript 아티팩트를 HTML로 변환할 수 있는 도구가 등록됩니다.
+
+package.json
+Node.js 프로젝트의 메타데이터와 의존성을 정의하는 파일입니다:
+- 프로젝트 이름, 버전, 설명 등의 정보
+- @modelcontextprotocol/sdk, ts-node, typescript 등의 의존성
+- 스크립트 명령어(start, build, install-tool 등)
+- 엔진 요구사항 및 기타 설정
+
+tsconfig.json
+TypeScript 컴파일러 설정 파일로, 다음을 정의합니다:
+- JavaScript 변환 대상 버전
+- 모듈 시스템 설정
+- 엄격한 타입 검사 옵션
+- 출력 디렉토리 및 기타 컴파일러 옵션
+
+■ 실행 및 설치 스크립트
+
+run.bat
+Windows에서 도구를 실행하기 위한 배치 스크립트입니다. Node.js와 ts-node를 사용하여 TypeScript 코드를 직접 실행합니다.
+
+run.sh
+macOS 및 Linux에서 도구를 실행하기 위한 셸 스크립트입니다. Windows의 run.bat와 동일한 기능을 합니다.
+
+install.js
+Claude 데스크톱 앱 설정을 자동으로 업데이트하는 스크립트입니다:
+- 운영체제 감지(Windows/macOS)
+- Claude 설정 파일 위치 확인
+- 도구 설정 추가 및 파일 경로 설정
+- 오류 시 수동 설치 안내 제공
+
+이 스크립트는 npm run install-tool 명령으로 실행됩니다.
+
+■ 문서 파일
+
+README.txt
+프로젝트의 메인 문서로, 다음 정보를 제공합니다:
+- 도구 설명 및 기능
+- 설치 방법
+- 사용 방법
+- 문제해결 팁
+- 라이선스 정보
+
+README_FOR_NEWUSER.txt
+새 사용자를 위한 더 자세한 설치 및 사용 가이드입니다:
+- GitHub에서 저장소 클론하기
+- 의존성 설치하기
+- 자동 및 수동 설정 방법
+- 각 파일의 기능 설명
+- GitHub 저장소에 코드 올리기
+- 문제해결 방법
+
+■ 기타 파일
+
+.gitignore
+Git 버전 관리에서 제외할 파일과 디렉토리를 정의하는 파일입니다:
+- node_modules/
+- dist/
+- 로그 파일
+- 시스템 및 IDE 설정 파일
