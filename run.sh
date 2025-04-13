@@ -1,2 +1,3 @@
 #!/bin/bash
-node --loader ts-node/esm index.ts "$@"
+# Run the SVG to HTML MCP server
+node index.js

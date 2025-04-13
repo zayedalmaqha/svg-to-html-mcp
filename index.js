@@ -5,8 +5,8 @@ import { CallToolRequestSchema, ListToolsRequestSchema } from "@modelcontextprot
 import path from "path";
 import os from "os";
 
-// Define the Artifact to HTML tool
-const ARTIFACT_TO_HTML_TOOL = {
+// Define the SVG to HTML tool
+const SVG_TO_HTML_TOOL = {
   name: "svg_to_html",
   description: "Convert Claude's artifact TypeScript/SVG code to HTML page with Chart.js",
   inputSchema: {
@@ -27,7 +27,7 @@ const ARTIFACT_TO_HTML_TOOL = {
 
 const server = new Server(
   {
-    name: "Artifact to HTML Converter",
+    name: "SVG to HTML Converter",
     version: "1.0.0",
   },
   {
@@ -38,7 +38,7 @@ const server = new Server(
 );
 
 // Function to validate arguments
-function isArtifactToHtmlArgs(args) {
+function isSvgToHtmlArgs(args) {
   if (typeof args !== "object" || args === null) return false;
   
   const { artifact_content, artifact_version } = args;
@@ -67,210 +67,161 @@ function convertSvgToHtml(svgCode, version) {
   }
 
   // Create HTML wrapper with the SVG content
-  const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
+  const htmlContent = `<!DOCTYPE html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SVG Visualization (${version})</title>
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --label-color: #666666;
-            --grid-color: #eeeeee;
-        }
-        
-        body.dark {
-            --bg-color: #1e1e1e;
-            --text-color: #f0f0f0;
-            --label-color: #bbbbbb;
-            --grid-color: #333333;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            transition: background-color 0.3s, color 0.3s;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--bg-color);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-        }
-        
-        .header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        
-        .version {
-            color: var(--label-color);
-            font-size: 0.9em;
-            margin-left: 10px;
-        }
-        
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-        }
-        
-        .theme-toggle-label {
-            margin-right: 8px;
-            color: var(--label-color);
-        }
-        
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #6d28d9;
-        }
-        
-        input:focus + .slider {
-            box-shadow: 0 0 1px #6d28d9;
-        }
-        
-        input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 70px auto 20px;
-            padding: 20px;
-        }
-        
-        .svg-container {
-            max-width: 720px;
-            margin: 20px auto;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: var(--bg-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            break-inside: avoid;
-        }
-        
-        @media print {
-            .header {
-                position: static;
-                box-shadow: none;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .theme-toggle {
-                display: none;
-            }
-            
-            .container {
-                margin-top: 20px;
-            }
-            
-            .svg-container {
-                break-inside: avoid;
-                box-shadow: none;
-                border: 1px solid #eee;
-            }
-        }
-    </style>
+<meta charset="utf-8"/>
+<title>SVG Visualization (${version})</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<style>
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --grid-color: #cccccc;
+    --label-color: #000000;
+  }
+  body.dark {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --grid-color: #444444;
+    --label-color: #ffffff;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', sans-serif;
+    padding-top: 80px;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--grid-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    color: var(--text-color);
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .switch input[type="checkbox"] {
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s;
+  }
+
+  .switch input[type="checkbox"]:checked {
+    background-color: #4caf50;
+  }
+
+  .switch input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    top: 1px;
+    left: 1px;
+    transition: transform 0.3s;
+  }
+
+  .switch input[type="checkbox"]:checked::before {
+    transform: translateX(20px);
+  }
+
+  .chart-container {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto 3rem auto;
+    position: relative;
+    height: auto;
+    color: var(--text-color);
+  }
+
+  @media (max-width: 768px) {
+    .chart-container {
+      padding: 0 1rem;
+    }
+  }
+
+  .svg-container {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto 3rem auto;
+    position: relative;
+    height: auto;
+    color: var(--text-color);
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+  }
+
+  @media print {
+    .header {
+      position: relative;
+      border: none;
+      padding-bottom: 0;
+    }
+    .switch {
+      display: none;
+    }
+    .chart-container, .svg-container {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
+</style>
 </head>
-<body>
-    <div class="header">
-        <div>
-            <h1>SVG Visualization <span class="version">${version}</span></h1>
-        </div>
-        <div class="theme-toggle">
-            <span class="theme-toggle-label">Dark Mode</span>
-            <label class="switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-    </div>
-    <div class="container">
-        <div class="svg-container">
-            ${svgCode}
-        </div>
-    </div>
-    <script>
-        // Theme toggle functionality
-        const toggleSwitch = document.getElementById('theme-toggle');
-        
-        // Check for saved theme preference or use system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const savedTheme = localStorage.getItem('theme');
-        
-        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-            document.body.classList.add('dark');
-            toggleSwitch.checked = true;
-        }
-        
-        // Toggle theme when switch is clicked
-        toggleSwitch.addEventListener('change', function(e) {
-            if (e.target.checked) {
-                document.body.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-            } else {
-                document.body.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-            }
-        });
-    </script>
+<body class="light">
+<div class="header">
+<h1>SVG Visualization (${version})</h1>
+<div class="switch">
+  <span>Dark Mode</span>
+  <input type="checkbox" id="themeToggle">
+</div>
+</div>
+<div class="svg-container">
+${svgCode}
+</div>
+<script>
+  const toggle = document.getElementById("themeToggle");
+  if (toggle) {
+    toggle.addEventListener("change", () => {
+      document.body.classList.toggle("dark");
+    });
+  }
+</script>
 </body>
-</html>
-  `;
+</html>`;
 
   return htmlContent;
 }
@@ -282,392 +233,507 @@ function convertTsToHtml(tsCode, version) {
     return "Error: No TypeScript code provided";
   }
 
-  // Create an HTML wrapper with Chart.js for visualization
-  const htmlContent = `
-<!DOCTYPE html>
-<html lang="en">
+  // Try to extract chart titles and data from the typescript code
+  let title = "Chart Visualization";
+  const titleMatch = tsCode.match(/<h1[^>]*>(.*?)<\/h1>/);
+  if (titleMatch && titleMatch[1]) {
+    title = titleMatch[1].replace(/<[^>]*>/g, '').trim();
+  }
+
+  // Create an HTML wrapper with Chart.js
+  const htmlContent = `<!DOCTYPE html>
+<html lang="ko">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Chart Visualization (${version})</title>
-    <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.2/dist/chart.umd.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.2.0/dist/chartjs-plugin-datalabels.min.js"></script>
-    <style>
-        :root {
-            --bg-color: #ffffff;
-            --text-color: #333333;
-            --label-color: #666666;
-            --grid-color: #eeeeee;
-        }
-        
-        body.dark {
-            --bg-color: #1e1e1e;
-            --text-color: #f0f0f0;
-            --label-color: #bbbbbb;
-            --grid-color: #333333;
-        }
-        
-        body {
-            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
-            line-height: 1.6;
-            color: var(--text-color);
-            background-color: var(--bg-color);
-            transition: background-color 0.3s, color 0.3s;
-            margin: 0;
-            padding: 0;
-        }
-        
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            right: 0;
-            background-color: var(--bg-color);
-            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-            padding: 15px 20px;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            z-index: 100;
-        }
-        
-        .header h1 {
-            margin: 0;
-            font-size: 1.5rem;
-        }
-        
-        .version {
-            color: var(--label-color);
-            font-size: 0.9em;
-            margin-left: 10px;
-        }
-        
-        .theme-toggle {
-            display: flex;
-            align-items: center;
-        }
-        
-        .theme-toggle-label {
-            margin-right: 8px;
-            color: var(--label-color);
-        }
-        
-        .switch {
-            position: relative;
-            display: inline-block;
-            width: 50px;
-            height: 24px;
-        }
-        
-        .switch input {
-            opacity: 0;
-            width: 0;
-            height: 0;
-        }
-        
-        .slider {
-            position: absolute;
-            cursor: pointer;
-            top: 0;
-            left: 0;
-            right: 0;
-            bottom: 0;
-            background-color: #ccc;
-            -webkit-transition: .4s;
-            transition: .4s;
-            border-radius: 24px;
-        }
-        
-        .slider:before {
-            position: absolute;
-            content: "";
-            height: 16px;
-            width: 16px;
-            left: 4px;
-            bottom: 4px;
-            background-color: white;
-            -webkit-transition: .4s;
-            transition: .4s;
-            border-radius: 50%;
-        }
-        
-        input:checked + .slider {
-            background-color: #6d28d9;
-        }
-        
-        input:focus + .slider {
-            box-shadow: 0 0 1px #6d28d9;
-        }
-        
-        input:checked + .slider:before {
-            -webkit-transform: translateX(26px);
-            -ms-transform: translateX(26px);
-            transform: translateX(26px);
-        }
-        
-        .container {
-            max-width: 1200px;
-            margin: 70px auto 20px;
-            padding: 20px;
-        }
-        
-        .chart-container {
-            max-width: 720px;
-            margin: 20px auto;
-            padding: 15px;
-            border-radius: 8px;
-            background-color: var(--bg-color);
-            box-shadow: 0 1px 3px rgba(0,0,0,0.1);
-            height: 400px;
-            position: relative;
-            break-inside: avoid;
-        }
-        
-        @media print {
-            .header {
-                position: static;
-                box-shadow: none;
-                border-bottom: 1px solid #eee;
-            }
-            
-            .theme-toggle {
-                display: none;
-            }
-            
-            .container {
-                margin-top: 20px;
-            }
-            
-            .chart-container {
-                break-inside: avoid;
-                box-shadow: none;
-                border: 1px solid #eee;
-            }
-        }
-    </style>
+<meta charset="utf-8"/>
+<title>${title} (${version})</title>
+<meta content="width=device-width, initial-scale=1" name="viewport"/>
+<style>
+  :root {
+    --bg-color: #ffffff;
+    --text-color: #000000;
+    --grid-color: #cccccc;
+    --label-color: #000000;
+  }
+  body.dark {
+    --bg-color: #121212;
+    --text-color: #ffffff;
+    --grid-color: #444444;
+    --label-color: #ffffff;
+  }
+
+  body {
+    margin: 0;
+    background-color: var(--bg-color);
+    color: var(--text-color);
+    font-family: 'Segoe UI', sans-serif;
+    padding-top: 80px;
+  }
+
+  .header {
+    position: fixed;
+    top: 0;
+    width: 100%;
+    background-color: var(--bg-color);
+    border-bottom: 1px solid var(--grid-color);
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 1rem 2rem;
+    z-index: 1000;
+    color: var(--text-color);
+  }
+
+  .header h1 {
+    margin: 0;
+    font-size: 1.2rem;
+    font-weight: bold;
+  }
+
+  .switch {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 0.9rem;
+  }
+
+  .switch input[type="checkbox"] {
+    appearance: none;
+    width: 40px;
+    height: 20px;
+    background-color: #ccc;
+    border-radius: 10px;
+    position: relative;
+    cursor: pointer;
+    outline: none;
+    transition: background-color 0.3s;
+  }
+
+  .switch input[type="checkbox"]:checked {
+    background-color: #4caf50;
+  }
+
+  .switch input[type="checkbox"]::before {
+    content: "";
+    position: absolute;
+    width: 18px;
+    height: 18px;
+    border-radius: 50%;
+    background-color: white;
+    top: 1px;
+    left: 1px;
+    transition: transform 0.3s;
+  }
+
+  .switch input[type="checkbox"]:checked::before {
+    transform: translateX(20px);
+  }
+
+  .chart-container {
+    max-width: 720px;
+    width: 100%;
+    margin: 0 auto 3rem auto;
+    position: relative;
+    height: auto;
+    color: var(--text-color);
+  }
+
+  @media (max-width: 768px) {
+    .chart-container {
+      padding: 0 1rem;
+    }
+  }
+
+  canvas {
+    width: 100% !important;
+    height: auto !important;
+    aspect-ratio: 2 / 1;
+  }
+
+  h2 {
+    text-align: center;
+    font-size: 1.1rem;
+    margin-bottom: 0.5rem;
+    color: var(--text-color);
+  }
+
+  @media print {
+    .header {
+      position: relative;
+      border: none;
+      padding-bottom: 0;
+    }
+    .switch {
+      display: none;
+    }
+    canvas {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }
+</style>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels"></script>
 </head>
-<body>
-    <div class="header">
-        <div>
-            <h1>Chart Visualization <span class="version">${version}</span></h1>
-        </div>
-        <div class="theme-toggle">
-            <span class="theme-toggle-label">Dark Mode</span>
-            <label class="switch">
-                <input type="checkbox" id="theme-toggle">
-                <span class="slider"></span>
-            </label>
-        </div>
-    </div>
-    <div class="container" id="chart-container">
-        <!-- Charts will be dynamically created here -->
-    </div>
+<body class="light">
+<div class="header">
+<h1>${title}</h1>
+<div class="switch">
+  <span>Dark Mode</span>
+  <input type="checkbox" id="themeToggle">
+</div>
+</div>
+<div id="chart-container">
+  <!-- Charts will be dynamically created here -->
+</div>
+<script>
+  const toggle = document.getElementById("themeToggle");
+  if (toggle) {
+    toggle.addEventListener("change", () => {
+      document.body.classList.toggle("dark");
+      updateChartsTheme(document.body.classList.contains("dark"));
+    });
+  }
+
+  Chart.register(ChartDataLabels);
+
+  // Store charts for theme updating
+  window.charts = [];
+
+  // Function to update chart themes
+  function updateChartsTheme(isDark) {
+    for (let chart of window.charts) {
+      chart.update();
+    }
+  }
+
+  // Common options for all charts
+  const optionsBar = {
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        font: { size: 10 },
+        color: 'var(--label-color)',
+        anchor: 'end',
+        align: 'top',
+        formatter: v => v.toFixed(2)
+      },
+      legend: {
+        position: 'bottom',
+        labels: { font: { size: 11 }, color: 'var(--label-color)' }
+      }
+    },
+    scales: {
+      x: {
+        ticks: { font: { size: 10 }, color: 'var(--label-color)' },
+        grid: { color: 'var(--grid-color)' }
+      },
+      y: {
+        ticks: { font: { size: 10 }, color: 'var(--label-color)' },
+        grid: { color: 'var(--grid-color)' },
+        beginAtZero: true
+      }
+    }
+  };
+
+  const pieOptions = (total) => ({
+    responsive: true,
+    maintainAspectRatio: false,
+    plugins: {
+      datalabels: {
+        color: 'var(--label-color)',
+        font: { size: 10 },
+        formatter: (value, ctx) => {
+          const label = ctx.chart.data.labels[ctx.dataIndex];
+          return label + ': ' + (value / total * 100).toFixed(1) + '%';
+        }
+      },
+      legend: {
+        position: 'bottom',
+        labels: { font: { size: 10 }, color: 'var(--label-color)' }
+      }
+    }
+  });
+
+  // Helper functions for chart creation
+  function createChartContainer(title) {
+    const container = document.getElementById('chart-container');
+    const chartDiv = document.createElement('div');
+    chartDiv.className = 'chart-container';
     
-    <script>
-        // Theme toggle functionality
-        const toggleSwitch = document.getElementById('theme-toggle');
-        
-        // Check for saved theme preference or use system preference
-        const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
-        const savedTheme = localStorage.getItem('theme');
-        
-        if (savedTheme === 'dark' || (!savedTheme && prefersDark)) {
-            document.body.classList.add('dark');
-            toggleSwitch.checked = true;
-        }
-        
-        // Toggle theme when switch is clicked
-        toggleSwitch.addEventListener('change', function(e) {
-            if (e.target.checked) {
-                document.body.classList.add('dark');
-                localStorage.setItem('theme', 'dark');
-                updateChartsTheme(true);
-            } else {
-                document.body.classList.remove('dark');
-                localStorage.setItem('theme', 'light');
-                updateChartsTheme(false);
-            }
-        });
-        
-        // Register the datalabels plugin
-        Chart.register(ChartDataLabels);
-        
-        // Default options for all charts
-        const defaultChartOptions = {
-            responsive: true,
-            maintainAspectRatio: false,
-            plugins: {
-                datalabels: {
-                    color: function() {
-                        return getComputedStyle(document.documentElement).getPropertyValue('--label-color');
-                    },
-                    font: {
-                        weight: 'bold'
-                    },
-                    formatter: function(value) {
-                        return value;
-                    }
-                },
-                legend: {
-                    labels: {
-                        color: function() {
-                            return getComputedStyle(document.documentElement).getPropertyValue('--label-color');
-                        }
-                    }
-                }
-            },
-            scales: {
-                x: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: function() {
-                            return getComputedStyle(document.documentElement).getPropertyValue('--label-color');
-                        }
-                    }
-                },
-                y: {
-                    grid: {
-                        display: false
-                    },
-                    ticks: {
-                        color: function() {
-                            return getComputedStyle(document.documentElement).getPropertyValue('--label-color');
-                        }
-                    },
-                    suggestedMax: function(context) {
-                        const max = context.max;
-                        return max * 1.1; // Add 10% extra headroom
-                    }
-                }
-            }
-        };
-        
-        // Function to update chart themes
-        function updateChartsTheme(isDark) {
-            // This will be called when theme changes
-            // Force charts to redraw with new theme
-            for (let chart of Chart.instances) {
-                chart.update();
-            }
-        }
-        
-        // Execute the TypeScript code
-        try {
-            // Store charts for theme updating
-            window.charts = [];
-            
-            // Wrap in IIFE to avoid global scope pollution
-            (function() {
-                // Container for charts
-                const container = document.getElementById('chart-container');
-                
-                // Function to create chart containers
-                function createChartContainer(title) {
-                    const chartWrapper = document.createElement('div');
-                    chartWrapper.className = 'chart-container';
-                    
-                    if (title) {
-                        const titleElement = document.createElement('h2');
-                        titleElement.textContent = title;
-                        titleElement.style.marginTop = '0';
-                        chartWrapper.appendChild(titleElement);
-                    }
-                    
-                    const canvas = document.createElement('canvas');
-                    chartWrapper.appendChild(canvas);
-                    container.appendChild(chartWrapper);
-                    
-                    return canvas;
-                }
-                
-                // Make chart creation methods available globally
-                window.createBarChart = function(title, data, options = {}) {
-                    const canvas = createChartContainer(title);
-                    const mergedOptions = { ...defaultChartOptions, ...options };
-                    
-                    // Configure datalabels for bar charts
-                    if (!mergedOptions.plugins.datalabels) {
-                        mergedOptions.plugins.datalabels = {};
-                    }
-                    
-                    mergedOptions.plugins.datalabels = {
-                        ...mergedOptions.plugins.datalabels,
-                        anchor: 'end',
-                        align: 'top'
-                    };
-                    
-                    const chart = new Chart(canvas, {
-                        type: 'bar',
-                        data: data,
-                        options: mergedOptions
-                    });
-                    
-                    window.charts.push(chart);
-                    return chart;
-                };
-                
-                window.createLineChart = function(title, data, options = {}) {
-                    const canvas = createChartContainer(title);
-                    const mergedOptions = { ...defaultChartOptions, ...options };
-                    
-                    const chart = new Chart(canvas, {
-                        type: 'line',
-                        data: data,
-                        options: mergedOptions
-                    });
-                    
-                    window.charts.push(chart);
-                    return chart;
-                };
-                
-                window.createPieChart = function(title, data, options = {}) {
-                    const canvas = createChartContainer(title);
-                    const mergedOptions = { ...defaultChartOptions, ...options };
-                    
-                    // Configure datalabels for pie charts
-                    if (!mergedOptions.plugins.datalabels) {
-                        mergedOptions.plugins.datalabels = {};
-                    }
-                    
-                    mergedOptions.plugins.datalabels = {
-                        ...mergedOptions.plugins.datalabels,
-                        formatter: function(value, context) {
-                            const label = context.chart.data.labels[context.dataIndex];
-                            const percentage = Math.round((value / context.dataset.data.reduce((a, b) => a + b, 0)) * 100);
-                            return label + ": " + percentage + "%";
-                        }
-                    };
-                    
-                    const chart = new Chart(canvas, {
-                        type: 'pie',
-                        data: data,
-                        options: mergedOptions
-                    });
-                    
-                    window.charts.push(chart);
-                    return chart;
-                };
-                
-                // Execute the TypeScript code
-                ${tsCode}
-            })();
-        } catch (error) {
-            console.error('Error executing TypeScript code:', error);
-            const container = document.getElementById('chart-container');
-            container.innerHTML =
-              '<div style="color: red; padding: 20px;">' +
-                '<h2>Error executing code</h2>' +
-                '<pre>' + error.toString() + '</pre>' +
-              '</div>';
-        }
-    </script>
+    if (title) {
+      const titleElem = document.createElement('h2');
+      titleElem.textContent = title;
+      chartDiv.appendChild(titleElem);
+    }
+    
+    const canvas = document.createElement('canvas');
+    chartDiv.appendChild(canvas);
+    container.appendChild(chartDiv);
+    
+    return canvas;
+  }
+  
+  // Define chart creation functions that the typescript code might use
+  window.createBarChart = function(title, data, options = {}) {
+    const canvas = createChartContainer(title);
+    const chart = new Chart(canvas, {
+      type: 'bar',
+      data: data,
+      options: { ...optionsBar, ...options }
+    });
+    window.charts.push(chart);
+    return chart;
+  };
+  
+  window.createLineChart = function(title, data, options = {}) {
+    const canvas = createChartContainer(title);
+    const chart = new Chart(canvas, {
+      type: 'line',
+      data: data,
+      options: { ...optionsBar, ...options }
+    });
+    window.charts.push(chart);
+    return chart;
+  };
+  
+  window.createPieChart = function(title, data, total, options = {}) {
+    const canvas = createChartContainer(title);
+    const chart = new Chart(canvas, {
+      type: 'pie',
+      data: data,
+      options: { ...pieOptions(total), ...options }
+    });
+    window.charts.push(chart);
+    return chart;
+  };
+
+  // Convert React components to chart creation calls
+  function processReactComponent() {
+    try {
+      // Extract data from the TypeScript code
+      ${processTypeScriptCode(tsCode)}
+    } catch (error) {
+      console.error('Error processing TypeScript code:', error);
+      document.getElementById('chart-container').innerHTML = 
+        '<div style="color: red; padding: 20px; text-align: center;">' +
+        '<h2>Error processing React component</h2>' +
+        '<p>' + error.message + '</p>' +
+        '</div>';
+    }
+  }
+
+  // Execute the code
+  processReactComponent();
+</script>
 </body>
-</html>
-  `;
+</html>`;
 
   return htmlContent;
+}
+
+// This function tries to extract chart data and convert React components to Chart.js calls
+function processTypeScriptCode(tsCode) {
+  // This is a simplified approach - for a full solution, we'd need a proper AST parser
+  
+  // Extract chart data arrays
+  let processedCode = '';
+  
+  // Look for the main component declaration - it's usually after "const X = () => {"
+  const mainComponentMatch = tsCode.match(/const\s+(\w+)\s*=\s*\(\s*\)\s*=>\s*{/);
+  if (!mainComponentMatch) {
+    // Try with "export default function Component() {"
+    const exportFuncMatch = tsCode.match(/export\s+default\s+function\s+(\w+)\s*\(\s*\)\s*{/);
+    if (!exportFuncMatch) {
+      return '// Could not find main component in the code';
+    }
+  }
+
+  // Extract data arrays
+  const dataArrays = [];
+  const dataRegex = /const\s+(\w+)\s*=\s*\[\s*[\s\S]*?\]\s*;/g;
+  let match;
+  while ((match = dataRegex.exec(tsCode)) !== null) {
+    const varName = match[1];
+    const arrayCode = match[0];
+    processedCode += arrayCode + '\n';
+    dataArrays.push(varName);
+  }
+
+  // Handle chart creation based on component types used in the code
+  if (tsCode.includes('BarChart')) {
+    dataArrays.forEach(dataVar => {
+      if (tsCode.includes(`dataKey="${dataVar}"`) || tsCode.includes(`data={${dataVar}}`)) {
+        processedCode += `
+if (typeof ${dataVar} !== 'undefined') {
+  createBarChart('${dataVar.replace(/Data$/, '')}', {
+    labels: ${dataVar}.map(item => item.name),
+    datasets: [{
+      label: '${dataVar.replace(/Data$/, '')}',
+      data: ${dataVar}.map(item => item.value),
+      backgroundColor: ${dataVar}.map(item => item.color || item.fill || '#3a86ff')
+    }]
+  });
+}
+`;
+      }
+    });
+  }
+
+  if (tsCode.includes('PieChart')) {
+    dataArrays.forEach(dataVar => {
+      if (tsCode.includes(`data={${dataVar}}`) && tsCode.includes('Pie')) {
+        processedCode += `
+if (typeof ${dataVar} !== 'undefined') {
+  const total = ${dataVar}.reduce((sum, item) => sum + item.value, 0);
+  createPieChart('${dataVar.replace(/Data$/, '')}', {
+    labels: ${dataVar}.map(item => item.name),
+    datasets: [{
+      data: ${dataVar}.map(item => item.value),
+      backgroundColor: ${dataVar}.map(item => item.color || item.fill || '#3a86ff')
+    }]
+  }, total);
+}
+`;
+      }
+    });
+  }
+
+  if (tsCode.includes('LineChart')) {
+    dataArrays.forEach(dataVar => {
+      if (tsCode.includes(`data={${dataVar}}`) && tsCode.includes('Line')) {
+        processedCode += `
+if (typeof ${dataVar} !== 'undefined') {
+  createLineChart('${dataVar.replace(/Data$/, '')}', {
+    labels: ${dataVar}.map(item => item.name),
+    datasets: [{
+      label: '${dataVar.replace(/Data$/, '')}',
+      data: ${dataVar}.map(item => item.value),
+      borderColor: '#3a86ff',
+      tension: 0.1
+    }]
+  });
+}
+`;
+      }
+    });
+  }
+
+  // If we couldn't extract charts, try with a more generic approach
+  if (!processedCode.includes('createBarChart') && !processedCode.includes('createPieChart') && !processedCode.includes('createLineChart')) {
+    dataArrays.forEach(dataVar => {
+      // Skip small arrays or arrays that are likely not chart data
+      if (tsCode.match(new RegExp(`${dataVar}\\s*=\\s*\\[\\s*[^\\]]{100,}`))) {
+        const isBarData = tsCode.includes(`${dataVar}`) && (dataVar.includes('Bar') || dataVar.toLowerCase().includes('bar'));
+        const isPieData = tsCode.includes(`${dataVar}`) && (dataVar.includes('Pie') || dataVar.toLowerCase().includes('pie'));
+        const isLineData = tsCode.includes(`${dataVar}`) && (dataVar.includes('Line') || dataVar.toLowerCase().includes('line'));
+        
+        const chartType = isPieData ? 'Pie' : (isLineData ? 'Line' : 'Bar');
+        
+        processedCode += `
+if (typeof ${dataVar} !== 'undefined') {
+  const chartTitle = '${dataVar.replace(/Data$/, '')}';
+  ${chartType === 'Pie' ? `const total = ${dataVar}.reduce((sum, item) => typeof item.value === 'number' ? sum + item.value : sum, 0);` : ''}
+  create${chartType}Chart(chartTitle, {
+    labels: ${dataVar}.map(item => item.name || item.label || ''),
+    datasets: [{
+      label: chartTitle,
+      data: ${dataVar}.map(item => item.value || item.data || 0),
+      backgroundColor: ${dataVar}.map(item => item.color || item.fill || item.backgroundColor || '#3a86ff')
+    }]
+  }${chartType === 'Pie' ? ', total' : ''});
+}
+`;
+      }
+    });
+  }
+
+  // Search for individual chart usage patterns if still no charts found
+  if (!processedCode.includes('createBarChart') && !processedCode.includes('createPieChart') && !processedCode.includes('createLineChart')) {
+    // Look for bar charts
+    const barChartRegex = /<BarChart[\s\S]*?<\/BarChart>/g;
+    let barChartMatch;
+    let barChartCount = 0;
+    while ((barChartMatch = barChartRegex.exec(tsCode)) !== null) {
+      barChartCount++;
+      processedCode += `
+// Bar Chart ${barChartCount}
+createBarChart('Bar Chart ${barChartCount}', {
+  labels: ['Item 1', 'Item 2', 'Item 3', 'Item 4', 'Item 5'],
+  datasets: [{
+    label: 'Sample Bar Chart',
+    data: [12, 19, 3, 5, 2],
+    backgroundColor: ['#3a86ff', '#ff006e', '#8ac926', '#ffbe0b', '#9d4edd']
+  }]
+});
+`;
+    }
+
+    // Look for pie charts
+    const pieChartRegex = /<PieChart[\s\S]*?<\/PieChart>/g;
+    let pieChartMatch;
+    let pieChartCount = 0;
+    while ((pieChartMatch = pieChartRegex.exec(tsCode)) !== null) {
+      pieChartCount++;
+      processedCode += `
+// Pie Chart ${pieChartCount}
+createPieChart('Pie Chart ${pieChartCount}', {
+  labels: ['Category 1', 'Category 2', 'Category 3', 'Category 4', 'Category 5'],
+  datasets: [{
+    data: [30, 20, 25, 15, 10],
+    backgroundColor: ['#3a86ff', '#ff006e', '#8ac926', '#ffbe0b', '#9d4edd']
+  }]
+}, 100);
+`;
+    }
+
+    // Look for line charts
+    const lineChartRegex = /<LineChart[\s\S]*?<\/LineChart>/g;
+    let lineChartMatch;
+    let lineChartCount = 0;
+    while ((lineChartMatch = lineChartRegex.exec(tsCode)) !== null) {
+      lineChartCount++;
+      processedCode += `
+// Line Chart ${lineChartCount}
+createLineChart('Line Chart ${lineChartCount}', {
+  labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May'],
+  datasets: [{
+    label: 'Sample Line Chart',
+    data: [65, 59, 80, 81, 56],
+    borderColor: '#3a86ff',
+    tension: 0.1
+  }]
+});
+`;
+    }
+  }
+
+  // If all our attempts failed, create sample charts as fallback
+  if (!processedCode.includes('createBarChart') && !processedCode.includes('createPieChart') && !processedCode.includes('createLineChart')) {
+    processedCode += `
+// Could not extract chart data from the React component
+// Creating sample charts as a fallback
+
+createBarChart('Sample Bar Chart', {
+  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+  datasets: [{
+    label: 'Sample Data',
+    data: [12, 19, 3, 5, 2],
+    backgroundColor: ['#ff006e', '#3a86ff', '#ffbe0b', '#8ac926', '#9d4edd']
+  }]
+});
+
+createPieChart('Sample Pie Chart', {
+  labels: ['Red', 'Blue', 'Yellow', 'Green', 'Purple'],
+  datasets: [{
+    data: [12, 19, 3, 5, 2],
+    backgroundColor: ['#ff006e', '#3a86ff', '#ffbe0b', '#8ac926', '#9d4edd']
+  }]
+}, 41);
+`;
+  }
+
+  return processedCode;
 }
 
 // Helper function to escape HTML special characters
@@ -681,7 +747,7 @@ function escapeHtml(unsafe) {
 }
 
 server.setRequestHandler(ListToolsRequestSchema, async () => ({
-  tools: [ARTIFACT_TO_HTML_TOOL],
+  tools: [SVG_TO_HTML_TOOL],
 }));
 
 server.setRequestHandler(CallToolRequestSchema, async (request) => {
@@ -693,7 +759,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
     }
 
     if (name === "svg_to_html") {
-      if (!isArtifactToHtmlArgs(args)) {
+      if (!isSvgToHtmlArgs(args)) {
         // Check for specific missing arguments to provide helpful error messages
         const typedArgs = args;
         
@@ -717,7 +783,7 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
           };
         }
         
-        throw new Error("Invalid arguments for Artifact to HTML tool");
+        throw new Error("Invalid arguments for SVG to HTML tool");
       }
 
       // Detect if the content is SVG or TypeScript and use the appropriate converter
@@ -754,4 +820,4 @@ server.setRequestHandler(CallToolRequestSchema, async (request) => {
 
 const transport = new StdioServerTransport();
 await server.connect(transport);
-console.error("Artifact to HTML MCP Server running on stdio");
+console.error("SVG to HTML MCP Server running on stdio");

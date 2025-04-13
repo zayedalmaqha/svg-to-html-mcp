@@ -5,7 +5,7 @@ const os = require('os');
 const { execSync } = require('child_process');
 
 // 설치 절차 시작
-console.log('Artifact to HTML MCP 도구 설치를 시작합니다...');
+console.log('SVG to HTML MCP 도구 설치를 시작합니다...');
 
 // OS 감지
 const isWindows = os.platform() === 'win32';
@@ -58,21 +58,20 @@ if (claudeConfigPath && fs.existsSync(claudeConfigPath)) {
         // 도구 명령 설정 - GitHub 저장소 방식
         config['svg-to-html'] = {
             command: 'npx',
-            args: ['-y', 'github:zayedalmaqha/svg-to-html-mcp#npx-compatible']
+            args: ['-y', 'github:zayedalmaqha/svg-to-html-mcp']
         };
         
         // 수정된 설정 파일 저장
         fs.writeFileSync(claudeConfigPath, JSON.stringify(config, null, 2), 'utf8');
         console.log('Claude 설정 파일이 업데이트되었습니다.');
-        console.log('도구가 성공적으로 설치되었습니다. Chart.js를 사용한 시각화와 다크 모드 지원이 추가되었습니다.');
-        console.log('Claude 데스크톱 앱을 재시작하세요.');
+        console.log('도구가 성공적으로 설치되었습니다. Claude 데스크톱 앱을 재시작하세요.');
     } catch (error) {
         console.error('설정 파일 업데이트 실패:', error.message);
         console.log('\n수동 설정 방법:');
         console.log(`Claude 설정 파일(${claudeConfigPath})에 다음을 추가하세요:`);
         console.log(`"svg-to-html": {
   "command": "npx",
-  "args": ["-y", "github:zayedalmaqha/svg-to-html-mcp#npx-compatible"]
+  "args": ["-y", "github:zayedalmaqha/svg-to-html-mcp"]
 }`);
     }
 } else {
@@ -82,6 +81,6 @@ if (claudeConfigPath && fs.existsSync(claudeConfigPath)) {
     console.log(`Claude 설정 파일에 다음을 추가하세요:`);
     console.log(`"svg-to-html": {
   "command": "npx",
-  "args": ["-y", "github:zayedalmaqha/svg-to-html-mcp#npx-compatible"]
+  "args": ["-y", "github:zayedalmaqha/svg-to-html-mcp"]
 }`);
 }
